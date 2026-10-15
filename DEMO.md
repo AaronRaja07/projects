@@ -1,6 +1,6 @@
 # Recruiter walkthrough
 
-Launch with `python3 server.py`. All scenarios use fictional records and deterministic generation.
+Open the [public portfolio](https://aaron-raja-product-lab.cheekyllama6.chatgpt.site), or launch locally with `python3 server.py`. All scenarios use fictional records and deterministic generation. The hosted versions compute in-browser; Python/SQLite reference implementations and parity tests are available in the source.
 
 ## A short first pass
 
@@ -19,3 +19,5 @@ Launch with `python3 server.py`. All scenarios use fictional records and determi
 ## Evidence that should be shown
 
 Run the unittest suite, read the domain code, inspect generated records, and export a readout. Use the applications' labels honestly: these demonstrate engineering and product reasoning, not proven customer impact.
+
+Exports open a readonly preview with Save file and Copy contents controls. The preview contains literal generated output and remains available if an embedded browser restricts native downloads.

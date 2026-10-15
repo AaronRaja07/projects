@@ -163,6 +163,20 @@ class PipelineTests(unittest.TestCase):
                 self.post('/allocate', budget=budget)
         self.assertIsNone(self.get('/summary')['latest_allocation'])
 
+    def test_proposals_are_cleared_when_projection_changes_and_preserved_for_noops(self):
+        proposal = self.post('/allocate', budget=1200)
+        self.assertEqual(proposal, self.get('/summary')['latest_allocation'])
+        self.post('/replay')
+        self.assertEqual(proposal, self.get('/summary')['latest_allocation'])
+        self.post('/disrupt', scenario='scanner')
+        self.assertEqual(proposal, self.get('/summary')['latest_allocation'])
+        self.post('/disrupt', scenario='weather')
+        self.assertIsNone(self.get('/summary')['latest_allocation'])
+        self.post('/allocate', budget=1200)
+        row = next(row for row in self.get('/quarantine')['rows'] if row['reason_code'] == 'BAD_DELAY')
+        self.post('/repair', raw_id=row['raw_id'], patch={'delay_minutes': 60})
+        self.assertIsNone(self.get('/summary')['latest_allocation'])
+
     def test_scenarios_have_observable_pipeline_and_state_effects(self):
         scanner = self.post('/disrupt', scenario='scanner')
         self.assertEqual({'validated': 0, 'duplicate': 1, 'quarantined': 2}, scanner['batch'])
@@ -173,6 +187,15 @@ class PipelineTests(unittest.TestCase):
         weather = self.post('/disrupt', scenario='weather')
         self.assertEqual(8, weather['batch']['validated'])
         self.assertGreater(self.get('/summary')['modeled_exposure'], exposure_before)
+
+    def test_scenarios_without_active_orders_fail_cleanly_without_mutation(self):
+        orders = self.get('/orders')['orders']
+        self.post('/ingest', events=[self.event('COMPLETE-' + order['order_id'], order_id=order['order_id'], type='delivered') for order in orders])
+        before = self.get('/audit')
+        for scenario in ['weather', 'scanner', 'late']:
+            with self.subTest(scenario=scenario), self.assertRaises(ValueError):
+                self.post('/disrupt', scenario=scenario)
+        self.assertEqual(before, self.get('/audit'))
 
     def test_reset_restores_generated_dataset_and_fingerprints(self):
         initial_audit = self.get('/audit')

@@ -115,7 +115,12 @@ def sample_ratio(rows):
 
 def analyze(values=None):
     p = parameters(values)
-    rows = generate(p)
+    return analyze_rows(generate(p), p)
+
+
+def analyze_rows(rows, values=None):
+    """Analyze supplied synthetic user rows; shared-row cross-runtime parity seam."""
+    p = parameters(values)
     primary = effect_metric(rows, "activated_7d")
     guardrail = effect_metric(rows, "support_contact_7d")
     srm = sample_ratio(rows)

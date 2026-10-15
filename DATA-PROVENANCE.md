@@ -19,3 +19,7 @@ No live customer research, deployment, user adoption, financial benefit, or recr
 ## Review boundary
 
 The current working tree was reviewed for employer identifiers, private hostnames, token patterns, emails, source archives, and accidental local state before publication. Automated pattern scanning cannot prove absence of all sensitive information; the stronger protection here is independent implementation and generated inputs. Earlier repository history contains the original generic project-outline names; no private source history was imported or rewritten.
+
+## Hosted runtime
+
+Hosted demos execute their domain logic in the visitor’s browser. Relay’s logical raw/accepted/quarantine tables preserve the replay contract, while its actual SQLite implementation is part of the local Python reference service. Signal’s browser and Python implementations use distinct documented seeded RNGs; mathematical parity is checked on shared user rows. Simulation outputs name their runtime so different seeds/generators are not conflated.

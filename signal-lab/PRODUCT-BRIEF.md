@@ -32,6 +32,7 @@ Primary rollout checks were chosen for this fictional scenario: positive 95% act
 - As a support lead, I can introduce friction and see its uncertainty. Acceptance: the support limit uses an interval, rather than only the point estimate.
 - As an engineering lead, I can change capacity and inspect a dependency-valid optimal roadmap. Acceptance: selected effort never exceeds capacity and selected features always include prerequisites.
 - As a skeptical reviewer, I can run A/A trials and examine uncertainty in the false-positive rate. Acceptance: the evaluation actually draws independent outcomes and exposes its seed, denominator, and limitations.
+- As a portfolio visitor, I can execute every scenario without setting up a server or sending data to an external service. Acceptance: the static app computes all five API-equivalent endpoints in the browser, and exported readouts identify the runtime and RNG.
 
 The prototype excludes real identity data, live experiment ingestion, multitenant collaboration, automated production rollout, and commercial forecasting.
 
@@ -50,14 +51,17 @@ Initial usability tasks: explain why the harmful variant is blocked; locate an a
 | Independent user randomization | Simple, inspectable statistical model | Shared workspaces may require cluster randomization |
 | Exploratory segment table | Reveals heterogeneous outcomes | No corrected subgroup inference is claimed |
 | Exact small roadmap solver | Makes dependencies and opportunity cost concrete | Add uncertainty, interactions, and larger-scale optimization if justified |
-| Standard library backend | Easy local reproduction and code review | Not a claim of distributed or production architecture |
+| Browser execution with Python reference | Static hosting makes the complete workflow immediately runnable; Python provides a separate executable implementation | Browser and Python RNGs differ; exported runtime metadata and shared-row parity tests make this explicit |
+| Documented Mulberry32 simulation RNG | Small, reproducible, dependency-free browser generator | Not suitable for secure assignment; equal numeric seeds are not cross-runtime data parity |
 | No LLM decision layer | Every numerical recommendation is independently inspectable | An assistant could explain results later, with verified source grounding |
 
 ## Launch and learning plan
 
 First validate the workflow with actual target users, then connect a read-only anonymized event source with explicit authorization. Shadow existing decisions before automating recommendations. Run a prospective A/A experiment to inspect real assignment and instrumentation; review workspace interference and missingness. Gate any production rollout through accountable product and engineering owners. Monitor activation, support burden, retention, and incident signals after staged exposure.
 
-For this portfolio version, evaluation is a local simulation and test suite. There are no claims of saved hours, increased revenue, customer adoption, or validated product-market fit.
+For this portfolio version, evaluation is an actual simulation and test suite. The static browser implementation produces 8/200 A/A false positives (4.0%, 96.0% interval coverage) at seed 42; the independent Python RNG produces 11/200 (5.5%, 94.5% coverage). Neither result by itself proves universal calibration. Five shared-row scenarios compare 9,700 users across the two statistical implementations; all 31 roadmap capacities are compared too. There are no claims of saved hours, increased revenue, customer adoption, or validated product-market fit.
+
+The hosted app loads a static UI and a local JavaScript service. It generates synthetic user rows on demand, applies the policy, and prepares user CSV/readout exports entirely in the browser. No generated users are uploaded, no credentials are requested, and no customer storage is created. The separately runnable Python API retains the reference analysis. The visitor's result is labeled as browser simulation, and reproducibility requires the stated runtime, RNG version, and seed.
 
 ## Why this is relevant to target roles
 

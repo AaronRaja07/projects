@@ -242,6 +242,7 @@ def _materialize(db):
 def _ingest(db, events, batch_id):
     if not isinstance(events, list) or not 1 <= len(events) <= 500:
         raise ValueError('Provide between 1 and 500 event objects')
+    before = _projection_digest(db)
     counts = {'validated': 0, 'duplicate': 0, 'quarantined': 0}
     for payload in events:
         raw_text = canonical(payload)
@@ -250,6 +251,8 @@ def _ingest(db, events, batch_id):
         outcome = _process_raw(db, cur.lastrowid, payload)
         counts[outcome] += 1
     _materialize(db)
+    if _projection_digest(db) != before:
+        _set_meta(db, 'latest_allocation', None)
     return counts
 
 
@@ -435,6 +438,10 @@ def handle(method, path, query, body):
             number = _meta(db, 'disruption_count', 0) + 1
             active = [order for order in _orders(db) if order['status'] != 'delivered']
             active.sort(key=lambda order: order['order_id'])
+            if scenario == 'scanner' and len(active) < 2:
+                raise ValueError('Scanner scenario needs at least two active generated orders')
+            if scenario in {'weather', 'late'} and not active:
+                raise ValueError('No active generated orders remain for this scenario')
             events = []
             if scenario == 'weather':
                 for index, order in enumerate(active[:8]):
@@ -463,6 +470,8 @@ def handle(method, path, query, body):
                 _process_raw(db, row['raw_id'], json.loads(row['payload']))
             _materialize(db)
             after = _projection_digest(db)
+            if after != before:
+                _set_meta(db, 'latest_allocation', None)
             result = {'raw_rows_replayed': len(raw_rows), 'before_digest': before, 'after_digest': after,
                       'idempotent': before == after, 'counts': _counts(db)}
             _audit(db, 'replay', result)

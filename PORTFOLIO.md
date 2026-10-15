@@ -19,7 +19,7 @@ Demonstrates integration of messy feeds into an auditable operational workflow: 
 The following official role descriptions informed these project choices. Titles and postings can change; these are evidence for the design rationale, not a claim that completing the projects qualifies someone for a role.
 
 - [Palantir Forward Deployed Software Engineer](https://jobs.lever.co/palantir/dab396d4-2f14-4796-aac0-0d82883dccf0): architecture, data wrangling, custom applications, stakeholder work, and ownership through deployment.
-- [Palantir Deployment Strategist](https://jobs.lever.co/palantir/1a53939d-8ffa-4570-b31a-6d0bc53fdb59): workflow discovery, relevant datasets, reliable pipelines, demos, and communication.
+- [Palantir Deployment Strategist – Korea Forward Deployed (sample posting)](https://jobs.lever.co/palantir/1a53939d-8ffa-4570-b31a-6d0bc53fdb59): workflow discovery, relevant datasets, reliable pipelines, demos, and communication. This specific posting also has location and clearance requirements; it is used only as an example of the work, not as a statement of eligibility.
 - [Databricks Solutions Architect](https://www.databricks.com/company/careers/field-engineering---other/solutions-architect---retail-consumer-goods-travel--hospitality--8615016002): end-to-end technical strategy, Python/SQL, architecture, custom solutions, and a build/demo/pitch discussion.
 - [Databricks Product Management](https://www.databricks.com/company/careers/product/sr-product-manager-lakebase-lakehouse-8811265002): customer needs, roadmap ownership, priorities, measurable success, and iteration.
 
