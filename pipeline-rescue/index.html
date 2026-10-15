@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Relay Operations: a synthetic logistics pipeline with quarantine, replay, event lineage, and budget-aware intervention planning.">
+  <title>Relay Operations · Data to decisions</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .relay-mark{display:inline-grid;place-items:center;width:28px;height:28px;margin-right:8px;border:1px solid var(--cyan);color:var(--cyan);border-radius:6px}
+    .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;margin:24px 0 18px}.flow-node{position:relative;background:#0e171d;border:1px solid var(--line);border-top:2px solid var(--cyan);padding:19px;border-radius:4px}.flow-node:not(:last-child):after{content:'→';position:absolute;right:-21px;top:34px;color:var(--muted)}.flow-node small{font:10px ui-monospace,monospace;letter-spacing:1px;color:var(--muted)}.flow-node strong{display:block;font-size:31px;font-weight:500;margin:7px 0}.flow-node p{font-size:11px}.flow-node:last-child{border-top-color:var(--lime)}
+    .reconcile{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;padding-top:15px;border-top:1px solid var(--line)}.queue-button{font:12px ui-monospace,monospace;background:transparent;color:var(--cyan);padding:0;border:0;text-decoration:underline;text-underline-offset:3px}.risk-meter{display:inline-block;width:46px;height:5px;background:#2a3842;vertical-align:middle;margin-right:8px}.risk-meter i{display:block;height:100%;background:var(--amber)}.compact-note{font-size:11px;line-height:1.6;margin-top:13px;color:var(--muted)}.table-wrap td.explain{white-space:normal;min-width:200px;max-width:280px}.pipeline-label{color:var(--cyan)}
+    dialog{background:var(--panel);color:var(--text);border:1px solid #46616d;border-radius:8px;width:min(1050px,94vw);max-height:86vh;padding:25px}dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}dialog h2{margin-bottom:12px}dialog pre{background:#0c141a;border:1px solid var(--line);padding:16px;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.7 ui-monospace,monospace;color:#b9d0d8}.dialog-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:18px}.dialog-head h2{margin:0}.dialog-head button{padding:5px 12px}.dialog-kpis{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0}.dialog-kpis div{border-left:2px solid var(--cyan);padding:0 12px;font-size:12px}.dialog-kpis small{display:block}.dialog-stack{display:grid;gap:18px}textarea.patch{width:100%;min-height:115px;font-family:ui-monospace,monospace}.audit-hash{font:10px/1.6 ui-monospace,monospace;overflow-wrap:anywhere;color:var(--cyan)}.allocation-bar{height:15px;background:#26363d;border-radius:4px;overflow:hidden;margin:8px 0}.allocation-bar i{display:block;height:100%;background:var(--lime)}.allocation-bar.baseline i{background:var(--cyan)}.comparison-value{display:flex;justify-content:space-between;font-size:12px}.decision-result{border-left:2px solid var(--lime);padding-left:17px}.decision-result strong{font-size:30px;font-weight:500}.audit-row{display:grid;grid-template-columns:35px 170px 1fr;gap:15px;padding:13px 0;border-bottom:1px solid var(--line);font-size:12px}.audit-row code{color:var(--cyan)}.audit-row p{font-size:11px}.error{margin-bottom:20px}.loading{color:var(--muted);padding:30px 0}.sidebar nav button span{margin-right:10px;font:11px ui-monospace,monospace;opacity:.6}.foot a{color:var(--cyan)}#content:focus{outline:none}.budget-controls{display:flex;align-items:end;gap:15px;flex-wrap:wrap}.budget-controls label:first-child{flex:1;min-width:180px}.budget-controls input[type=number]{width:120px}.terminal-tag{font:10px ui-monospace,monospace;color:var(--cyan);border:1px solid var(--line);padding:5px 8px;display:inline-block;margin-top:13px}.quality-actions{margin:20px 0}.mini-label{font:10px ui-monospace,monospace;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+    @media(max-width:650px){.flow{gap:15px}.flow-node{padding:12px}.flow-node:not(:last-child):after{right:-14px;font-size:11px}.flow-node strong{font-size:25px}.audit-row{grid-template-columns:25px 1fr}.audit-row p{grid-column:2}.topbar .badge{font-size:9px}.dialog-kpis{gap:10px}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/"><span class="relay-mark">↗</span>Relay <b>Ops</b></a>
+    <nav aria-label="Workspace">
+      <button type="button" data-view="overview" class="active"><span>01</span>Control room</button>
+      <button type="button" data-view="events"><span>02</span>Event workbench</button>
+      <button type="button" data-view="interventions"><span>03</span>Interventions</button>
+      <button type="button" data-view="audit"><span>04</span>Trace &amp; audit</button>
+    </nav>
+    <div class="foot"><span class="badge">GENERATED DATA ONLY</span><p style="margin-top:14px">One event trail.<br>Every decision explainable.</p><a href="/">← Portfolio workspace</a><br><a href="/pipeline-rescue/README.md">Architecture &amp; demo guide ↗</a></div>
+  </aside>
+  <div>
+    <header class="topbar"><span>OPERATIONS INTELLIGENCE / <span class="pipeline-label">RELAY</span></span><span class="badge" id="clock">LOADING FIXTURE</span></header>
+    <main>
+      <div class="pagehead">
+        <div><div class="eyebrow">Data → evidence → intervention</div><h1>Relay Operations</h1><p>Catch broken events. Rebuild trustworthy state. Put a limited rescue budget where it changes the plan.</p></div>
+        <div class="actions"><button type="button" class="secondary" id="replay">Replay pipeline</button><button type="button" id="export">Export audit ↗</button></div>
+      </div>
+      <div id="error" class="error" role="alert" hidden></div>
+      <div class="filters" aria-label="Scenario controls">
+        <label>Inject a synthetic disruption<select id="scenario"><option value="weather">Weather delay · 8 active orders</option><option value="scanner">Scanner fault · invalid + duplicate events</option><option value="late">Late arrival · out-of-order event</option></select></label>
+        <button type="button" id="disrupt" class="secondary">Inject scenario</button>
+        <button type="button" id="reset" class="secondary">Reset fixture</button>
+        <small>Fixture clock is fixed. Every scenario is generated.</small>
+      </div>
+      <div id="content" tabindex="-1"><p class="loading">Building the generated event projection…</p></div>
+    </main>
+  </div>
+</div>
+<dialog id="detail" aria-labelledby="detail-title"><div class="dialog-head"><h2 id="detail-title">Event detail</h2><button type="button" class="secondary" id="close-detail" aria-label="Close detail">×</button></div><div id="detail-body"></div></dialog>
+<script src="/assets/ui.js"></script><script src="/pipeline-rescue/app.js"></script>
+</body>
+</html>
