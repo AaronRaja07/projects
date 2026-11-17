@@ -28,7 +28,7 @@ Open **http://127.0.0.1:8000**. Use `python3 server.py --port 8001` if needed. S
 | [Launch Decision Lab](signal-lab/) | Should a PM ship an onboarding change, and what fits next? | User-level synthetic experiments, intervals, assignment checks, guardrails, dependency-constrained roadmap | [Guide](signal-lab/README.md) |
 | [Relay Operations](pipeline-rescue/) | Which data failures and shipment risks deserve intervention? | SQLite validation/quarantine, lineage, idempotent replay, disruption recovery, budget allocation | [Guide](pipeline-rescue/README.md) |
 
-[Portfolio design and role relevance](PORTFOLIO.md) · [Data provenance](DATA-PROVENANCE.md) · [Recruiter walkthrough](DEMO.md)
+[Delivery dashboard case study](mission-control/CASE-STUDY.md) · [Portfolio design and role relevance](PORTFOLIO.md) · [Data provenance](DATA-PROVENANCE.md) · [Recruiter walkthrough](DEMO.md)
 
 ## Verification
 
