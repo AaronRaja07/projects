@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rating Tracker</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="tracker.css">
+  <script src="tracker.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../">Aaron Raja</a>
+    <a href="https://github.com/AaronRaja07/projects/tree/main/rating-tracker">Source on GitHub ↗</a>
+  </header>
+  <main class="tracker">
+    <div class="pagehead">
+      <div>
+        <h1>Rating Tracker</h1>
+        <p>Keep a record of what you’ve watched, read, or tried. Entries are saved in this browser.</p>
+      </div>
+    </div>
+    <div class="tracker-grid">
+      <section class="panel" aria-labelledby="editor-title">
+        <h2 id="editor-title">Add an entry</h2>
+        <form id="editor">
+          <label>Title <input name="title" required maxlength="120"></label>
+          <div class="field-pair">
+            <label>Category
+              <select name="category" id="category" aria-label="Entry category"></select>
+            </label>
+            <label>Rating
+              <select name="rating" aria-label="Rating" required>
+                <option value="">Choose</option>
+                <option value="5">5 / 5</option>
+                <option value="4">4 / 5</option>
+                <option value="3">3 / 5</option>
+                <option value="2">2 / 5</option>
+                <option value="1">1 / 5</option>
+              </select>
+            </label>
+          </div>
+          <label>Notes <textarea name="notes" rows="4" maxlength="600"></textarea></label>
+          <div class="actions">
+            <button type="submit" id="save">Add entry</button>
+            <button type="button" id="cancel" class="secondary" hidden>Cancel edit</button>
+          </div>
+          <p id="status" role="status"></p>
+        </form>
+      </section>
+      <section class="panel" aria-labelledby="entries-title">
+        <div class="section-head">
+          <h2 id="entries-title">Your entries</h2>
+          <p id="summary"></p>
+        </div>
+        <div class="field-pair filters">
+          <label>Search <input id="search" type="search" placeholder="Title or notes"></label>
+          <label>Category <select id="filter" aria-label="Filter by category"></select></label>
+        </div>
+        <p id="empty"></p>
+        <ul id="entries" class="entries"></ul>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

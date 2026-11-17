@@ -30,6 +30,11 @@ Open **http://127.0.0.1:8000**. Use `python3 server.py --port 8001` if needed. S
 
 [Delivery dashboard case study](mission-control/CASE-STUDY.md) · [Portfolio design and role relevance](PORTFOLIO.md) · [Data provenance](DATA-PROVENANCE.md) · [Recruiter walkthrough](DEMO.md)
 
+## Additional projects
+
+- [Rating Tracker](rating-tracker/) records personal ratings and notes locally in the browser.
+- [Argus](https://github.com/AaronRaja07/argus) detects service anomalies relative to traffic load and includes a fault-injection benchmark.
+
 ## Verification
 
 ```bash
@@ -51,7 +56,7 @@ Only original implementation, generated fixtures, and authored documentation bel
 
 ## Scope
 
-This is a focused portfolio, not a claim to replicate proprietary systems or distributed infrastructure. External production connectors, multi-user authentication, shared cloud persistence, and production scale are documented extension points. All three projects are hosted as browser-local sandboxes; backend/cloud scaling is described as a future extension, not claimed as a deployed capability. The earlier rating-tracker idea remains a [parked outline](rating-tracker/README.md), outside the featured builds.
+This is a focused portfolio, not a claim to replicate proprietary systems or distributed infrastructure. External production connectors, multi-user authentication, shared cloud persistence, and production scale are documented extension points. All three projects are hosted as browser-local sandboxes; backend/cloud scaling is described as a future extension, not claimed as a deployed capability.
 
 ## Rebuild the hosted Product Lab
 

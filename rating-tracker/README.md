@@ -1,17 +1,14 @@
 # Rating Tracker
 
-## What it does
+A personal log for movies, TV, books, games, food, and other items. Record a
+rating from 1 to 5 and optional notes. Search titles and notes, filter by
+category, and see the average for the entries in view.
 
-Planned personal tool to record items, assign ratings, and review them over time. Item types and rating scales will be defined before implementation.
+## Run locally
 
-## Status
+From the repository root, run `python3 server.py` and open
+[Rating Tracker](http://127.0.0.1:8000/rating-tracker/).
 
-Planning only; no application code yet.
-
-## Tech stack
-
-Not selected yet. Record the chosen framework, storage, and dependencies here when implementation begins.
-
-## How to run
-
-There is no runnable application yet. Setup and launch commands will be added with the first implementation.
+The app uses plain HTML, CSS, and JavaScript. It saves entries in your browser
+using local storage. Entries are specific to the browser profile and site
+address. Clearing that site's data removes its entries.
