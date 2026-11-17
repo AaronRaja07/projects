@@ -16,7 +16,7 @@ manifest=site/'.openai'/'hosting.json'
 if not manifest.exists():raise SystemExit('Persist the registered project ID first')
 dist=site/'dist';dist.mkdir(parents=True,exist_ok=True)
 assets=dist/'assets';assets.mkdir(exist_ok=True)
-for name in ['style.css','ui.js']:shutil.copy2(ROOT/'assets'/name,assets/name)
+for name in ['style.css','ui.js','decision-log.css','decision-log.js']:shutil.copy2(ROOT/'assets'/name,assets/name)
 mission='https://aaron-raja-mission-control.cheekyllama6.chatgpt.site'
 html=(ROOT/'index.html').read_text().replace('href="mission-control/"',f'href="{mission}"').replace('href="README.md"','href="https://github.com/AaronRaja07/projects#readme"')
 (dist/'index.html').write_text(html)
@@ -38,6 +38,10 @@ for slug in ['signal-lab','pipeline-rescue']:
     (destination/'index.html').write_text(html)
     for name in ['README.md','PRODUCT-BRIEF.md']:
         if (source/name).exists():shutil.copy2(source/name,destination/name)
+rating = dist / 'rating-tracker'
+rating.mkdir(exist_ok=True)
+for name in ('index.html', 'tracker.css', 'tracker.js'):
+    shutil.copy2(ROOT / 'rating-tracker' / name, rating / name)
 config=json.loads(manifest.read_text());config['static']={'directory':'dist'};manifest.write_text(json.dumps(config,indent=2)+'\n')
 (site/'README.md').write_text('# Aaron Raja · Product & Engineering Lab\n\nIndependent synthetic-data portfolio. Hosted experiments execute in-browser; Relay persists locally in each visitor’s browser. The local source implementation retains Python/SQLite for reproducible engineering review.\n\nSource: https://github.com/AaronRaja07/projects\n\nNo private data, original employer source, credentials, live connections, or generated local runtime state are included. Build with tools/build-product-lab.py from the public repository.\n')
 print(json.dumps({'output':str(dist),'files':len([p for p in dist.rglob('*') if p.is_file()]),'synthetic':True}))

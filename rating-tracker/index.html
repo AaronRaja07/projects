@@ -6,8 +6,8 @@
   <title>Rating Tracker</title>
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="tracker.css">
-  <script src="tracker.js" defer></script>
-</head>
+  <script src="../assets/ui.js"></script><script src="../assets/decision-log.js"></script><script src="tracker.js" defer></script>
+<link rel="stylesheet" href="../assets/decision-log.css"></head>
 <body>
   <header class="topbar">
     <a class="brand" href="../">Aaron Raja</a>
@@ -51,7 +51,7 @@
       <section class="panel" aria-labelledby="entries-title">
         <div class="section-head">
           <h2 id="entries-title">Your entries</h2>
-          <p id="summary"></p>
+          <p id="summary"></p><button type="button" class="secondary" id="decision-log">Decision log</button>
         </div>
         <div class="field-pair filters">
           <label>Search <input id="search" type="search" placeholder="Title or notes"></label>

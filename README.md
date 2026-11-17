@@ -35,6 +35,21 @@ Open **http://127.0.0.1:8000**. Use `python3 server.py --port 8001` if needed. S
 - [Rating Tracker](rating-tracker/) records personal ratings and notes locally in the browser.
 - [Argus](https://github.com/AaronRaja07/argus) detects service anomalies relative to traffic load and includes a fault-injection benchmark.
 
+## Decision logs
+
+Open **Decision log** in any of the four apps. Record a choice, its owner, a
+review date, the alternatives considered, and what evidence would change
+your mind. Each decision keeps a snapshot of the evidence shown when the
+log was opened. Add the actual outcome at review time or export the log
+as Markdown for a stakeholder update.
+
+Mission Control captures the active delivery filters and progress. Launch
+Decision Lab captures effect sizes, intervals, and run parameters. Relay
+Operations captures the intervention budget and the comparison against its
+first-due policy. Rating Tracker captures category counts and averages,
+with titles and notes omitted from the evidence snapshot. Logs live in the
+browser and are scoped to each app. Export a copy before clearing site data.
+
 ## Verification
 
 ```bash

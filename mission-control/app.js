@@ -1,14 +1,33 @@
 const {e,n,api,bars,line,toast,download}=UI;
 const views=[['overview','Overview','Portfolio delivery, sprint health, and decisions that need attention.'],['work','Work items','Trace every point to a story, owner, sprint, and outcome.'],['planning','Planning & Hygiene','Plan capacity, track scope commitments, and inspect work readiness.'],['readiness','Work readiness','Find missing context before it becomes a delivery surprise.'],['forecast','Forecasting & Risk','Explore uncertainty with 2,000 seeded throughput simulations.'],['dependencies','Dependencies','Inspect upstream requirements and the modeled critical chain.'],['contributors','Contributors','Workload and delivery context for fictional teams and contributors.'],['reviews','Product Reviews','Coordinate review sessions and the decisions they need to resolve.'],['reports','Reports & Analysis','A scoped executive readout derived from the shared story model.'],['gantt','Gantt','Modeled start and finish windows based on remaining scope and dependencies.'],['assistant','Assistant','A local, rule-based guide to the current synthetic delivery snapshot.'],['operations','Operations','Triage aging work and inspect the current operational queue.'],['platform','Platform Metrics','Inspect record integrity and the quality of the generated data model.'],['sources','Data Sources','Generated demo inputs, data provenance, and export controls.']];
 const navItems=[['overview','Dashboard'],['planning','Planning & Hygiene'],['reports','Reports & Analysis'],['gantt','▦ Gantt'],['forecast','◷ Forecasting & Risk'],['contributors','♙ Contributors'],['dependencies','◇ Dependencies'],['reviews','Product Reviews'],['assistant','Assistant'],['operations','Operations'],['platform','Platform Metrics'],['sources','Data Sources']];
-let view='overview', data;
+let view='overview', data, evidenceQuery, loadRequest=0;
 const query=()=>'?'+new URLSearchParams({team:document.querySelector('#team').value,sprint:document.querySelector('#sprint').value,status:document.querySelector('#status-filter').value,q:document.querySelector('#query-filter').value});
 const kpi=(label,value,note)=>`<div class="kpi"><small>${e(label)}</small><strong>${e(value)}</strong><p>${e(note)}</p></div>`;
 const table=(heads,rows)=>`<div class="table-wrap"><table><thead><tr>${heads.map(h=>`<th>${e(h)}</th>`).join('')}</tr></thead><tbody>${rows.join('')||`<tr><td colspan="${heads.length}" class="empty">No work in this selection.</td></tr>`}</tbody></table></div>`;
 const status=s=>`<span class="badge ${s==='Done'?'good':s==='Blocked'?'warn':''}">${e(s)}</span>`;
 const panel=(title,body)=>`<section class="panel"><h2>${e(title)}</h2>${body}</section>`;
 const epictable=()=>table(['Outcome','Team','Done / scope','Progress','Upstream'],data.epics.map(x=>`<tr><td class="wrap"><strong>${e(x.title)}</strong><br><small>${e(x.id)} · ${e(x.outcome)}</small></td><td>${e(x.team)}</td><td>${x.done} / ${x.points}</td><td>${x.completion}%<div class="progress"><i style="width:${x.completion}%"></i></div></td><td>${e(x.depends_on.join(', ')||'Independent')}</td></tr>`));
-async function load(){try{data=await api('/api/mission/overview'+query());document.querySelector('#filter-summary').textContent=data.metrics.tickets+' stories · '+data.metrics.points+' points';render();}catch(err){document.querySelector('#content').innerHTML=`<div class="error">${e(err.message)}</div>`;}}
+async function load() {
+  const request = ++loadRequest;
+  const scope = query();
+  const log = document.querySelector('#decision-log');
+  log.disabled = true;
+  try {
+    const overview = await api('/api/mission/overview' + scope);
+    if (request !== loadRequest) return;
+    data = overview;
+    evidenceQuery = scope;
+    document.querySelector('#filter-summary').textContent =
+      data.metrics.tickets + ' stories · ' + data.metrics.points + ' points';
+    render();
+    log.disabled = false;
+  } catch (err) {
+    if (request === loadRequest) {
+      document.querySelector('#content').innerHTML = `<div class="error">${e(err.message)}</div>`;
+    }
+  }
+}
 function render(){const v=views.find(x=>x[0]===view);document.querySelector('#title').textContent=v[1];document.querySelector('#description').textContent=v[2];document.querySelector('#nav').innerHTML=navItems.map(([id,label])=>`<button data-view="${id}" class="${view===id||(id==='planning'&&view==='readiness')?'active':''}">${e(label)}</button>`).join('');const m=data.metrics;let html='';
 if(view==='overview'){
 const inProgress=data.tickets.filter(t=>t.status==='In progress').length;
@@ -44,3 +63,18 @@ document.querySelector('#nav-left').onclick=()=>document.querySelector('#nav').s
 let zoom=100;function setZoom(value){zoom=Math.max(75,Math.min(125,value));document.querySelector('.workspace').style.zoom=zoom/100;document.querySelector('#zoom-level').textContent=zoom+'%';}document.querySelector('#zoom-out').onclick=()=>setZoom(zoom-5);document.querySelector('#zoom-in').onclick=()=>setZoom(zoom+5);document.querySelector('#zoom-reset').onclick=()=>setZoom(100);
 document.querySelector('#system-status').onclick=()=>{const p=document.querySelector('#status-panel');p.hidden=!p.hidden;if(!p.hidden)document.querySelector('#status-body').innerHTML=`<p><strong>Data mode:</strong> Entirely synthetic</p><p><strong>Fixture:</strong> seed 917 / fixed 14 Oct 2026</p><p><strong>Current selection:</strong> ${data.metrics.tickets} stories, ${data.metrics.points} points</p><p><strong>Persistence:</strong> ${window.MissionDemo?'This browser only':'Local JSON demo state'}</p><p><strong>External connections:</strong> None</p><p>All records are fictional. No private systems, credentials, or original datasets are included.</p>`;};document.querySelector('#close-status').onclick=()=>document.querySelector('#status-panel').hidden=true;
 load();
+
+DecisionLog.attach(document.querySelector('#decision-log'), {
+  project: 'Mission Control',
+  capture: () => {
+    if (!data) return null;
+    const { tickets, done, points } = data.metrics;
+    return [
+      'Generated delivery data',
+      'Filters: ' + ([...new URLSearchParams(evidenceQuery).entries()]
+        .filter(([, value]) => value).map(([key, value]) => key + '=' + value).join(', ') || 'All work'),
+      `${tickets} stories · ${done} of ${points} points complete`,
+      `Blocked stories: ${data.tickets.filter(ticket => ticket.status === 'Blocked').length}`,
+    ].join('\n');
+  },
+});

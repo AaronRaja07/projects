@@ -1,0 +1,31 @@
+.decision-log {
+  width: min(690px, calc(100% - 24px));
+  max-height: 88vh;
+  border: 1px solid var(--line, #40505a);
+  border-radius: 12px;
+  padding: clamp(16px, 4vw, 28px);
+  background: var(--panel, #151e25);
+  color: var(--text, #eef4ed);
+}
+.decision-log::backdrop { background: #0a111bc0; }
+.decision-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.decision-log form { display: grid; gap: 12px; }
+.decision-log form button { justify-self: start; }
+.decision-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.decision-fields input { width: 100%; min-width: 0; }
+.decision-log section { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 16px; }
+.decision-log pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.decision-log summary { cursor: pointer; font-weight: 650; overflow-wrap: anywhere; }
+.decision-log .decision-record { margin-top: 10px; }
+.decision-record p { margin-top: 7px; overflow-wrap: anywhere; }
+.decision-record form { margin-top: 12px; }

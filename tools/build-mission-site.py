@@ -16,7 +16,7 @@ if site == ROOT or ROOT in site.parents:
 dist = site / 'dist'
 dist.mkdir(parents=True, exist_ok=True)
 assets = dist / 'assets';assets.mkdir(exist_ok=True)
-for name in ['style.css','ui.js']:
+for name in ['style.css','ui.js','decision-log.css','decision-log.js']:
     shutil.copy2(ROOT / 'assets' / name, assets / name)
 for name in ['app.js','browser-service.js','dashboard.css','extended-views.js']:
     shutil.copy2(ROOT / 'mission-control' / name, dist / name)

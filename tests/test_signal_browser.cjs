@@ -126,13 +126,17 @@ test('a slower earlier UI scenario cannot overwrite the latest decision or expor
   const document={querySelector(selector){if(!elements.has(selector))elements.set(selector,makeElement());return elements.get(selector);},
     querySelectorAll(selector){return selector==='[data-scenario]'?scenarios:[];}};
   class FakeFormData {constructor(source){this.source=source;}get(key){return this.source.elements[key].value;}}
-  const context={document,FormData:FakeFormData,URLSearchParams,UI:{e:v=>String(v??''),n:v=>String(v),api:(route,body)=>new Promise(resolve=>pending.push({resolve,body})),toast(){},download:(...args)=>downloads.push(args)}};
+  let decisionEvidence;
+  const DecisionLog={attach:(_button, options)=>{decisionEvidence=options.capture;}};
+  const context={document,DecisionLog,FormData:FakeFormData,URLSearchParams,UI:{e:v=>String(v??''),n:v=>String(v),api:(route,body)=>new Promise(resolve=>pending.push({resolve,body})),toast(){},download:(...args)=>downloads.push(args)}};
   vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../signal-lab/app.js'),'utf8'),context);
   assert.equal(pending.length,1);scenarios[1].onclick();assert.equal(pending.length,2);
+  assert.equal(decisionEvidence(),null);
   pending[1].resolve(service.analyze(pending[1].body));await new Promise(resolve=>setImmediate(resolve));
   const latestHtml=elements.get('#experiment-result').innerHTML;assert.ok(latestHtml.includes('ROLL BACK'));
   pending[0].resolve(service.analyze(pending[0].body));await new Promise(resolve=>setImmediate(resolve));
   assert.equal(elements.get('#experiment-result').innerHTML,latestHtml);
+  assert.match(decisionEvidence(),/Policy decision: ROLL BACK/);
   elements.get('#export-readout').onclick();assert.equal(downloads.length,1);assert.ok(downloads[0][1].includes('Decision: ROLL BACK'));
   assert.ok(downloads[0][1].includes('mulberry32-v1'));assert.equal(submit.disabled,false);
 });

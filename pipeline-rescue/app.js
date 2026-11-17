@@ -120,3 +120,21 @@ document.addEventListener('submit',event=>{
   if(event.target.id==='repair-form'){event.preventDefault();(async()=>{try{const patch=JSON.parse(document.getElementById('repair-patch').value);const result=await UI.api(P+'/repair',{raw_id:Number(event.target.dataset.rawId),patch});document.getElementById('detail').close();await refresh();UI.toast(`Corrected event ${result.repair_event_id} appended`);}catch(error){document.getElementById('repair-error').textContent=error.message;}})();}
 });
 guarded(refresh);
+
+DecisionLog.attach(document.querySelector('#decision-log'), {
+  project: 'Relay Operations',
+  capture: () => {
+    const s = relay.summary;
+    if (!s) return null;
+    const a = relay.allocation;
+    return [
+      'Synthetic logistics data',
+      `Fixture time: ${s.as_of}`,
+      `${s.high_risk} high-risk orders · ${s.counts.quarantine_open} open quarantines`,
+      a ? `Budget: ${money(a.budget)} · Optimized: ${a.optimized.count} orders, ${money(a.optimized.spent)} spent`
+        : 'No intervention budget allocated.',
+      a ? `Modeled exposure avoided: ${money(a.optimized.avoidable_exposure)} optimized vs. ${money(a.baseline.avoidable_exposure)} first-due` : '',
+      a ? 'Proposed order IDs: ' + a.optimized.order_ids.join(', ') : '',
+    ].filter(Boolean).join('\n');
+  },
+});

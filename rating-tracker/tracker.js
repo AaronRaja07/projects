@@ -152,3 +152,16 @@ cancel.addEventListener('click', () => {
 search.addEventListener('input', render);
 filter.addEventListener('change', render);
 render();
+
+DecisionLog.attach(document.querySelector('#decision-log'), {
+  project: 'Rating Tracker',
+  capture: () => {
+    const buckets = categories.map(name => {
+      const ratings = entries.filter(entry => entry.category === name);
+      if (!ratings.length) return `${name}: no ratings`;
+      const average = ratings.reduce((sum, entry) => sum + entry.rating, 0) / ratings.length;
+      return `${name}: ${ratings.length} ratings · ${average.toFixed(1)} / 5 average`;
+    });
+    return ['Personal ratings · all entries', 'Title and note text excluded.', ...buckets].join('\n');
+  },
+});

@@ -23,10 +23,25 @@
     <details><summary>Measurement contract and sample rows</summary><ul class="method-list"><li>One row per assigned synthetic user; no exclusions after randomization. Activation is binary completion within seven days.</li><li>All rows have complete fourteen-day observation. No peeking, sequential significance claims, or simulated interview findings.</li><li>Predeclared policy: positive primary interval, observed lift ≥3 pp, support upper bound &lt;3 pp, ≥400 users per arm, planned 50:50 allocation.</li><li>The minimum sample is a demonstration threshold. It does not replace a prospective power calculation.</li></ul><div class="table-wrap"><table><thead><tr><th>Synthetic user</th><th>Arm</th><th>Segment</th><th>Activated</th><th>Support</th></tr></thead><tbody>${r.sample.map(u=>`<tr><td>${e(u.user_id)}</td><td>${e(u.arm)}</td><td>${e(u.segment)}</td><td>${u.activated_7d?'Yes':'No'}</td><td>${u.support_contact_7d?'Yes':'No'}</td></tr>`).join('')}</tbody></table></div></details>`;
     $('#download-users').onclick=downloadUsers;$('#view-roadmap').onclick=()=>show('roadmap');
   }
-  async function run() {const request=++experimentRequest,b=form.querySelector('button[type=submit]');b.disabled=true;b.textContent='Analyzing…';$('#export-readout').disabled=true;try {const result=await UI.api('/api/signal/analyze',getParams());if(request!==experimentRequest)return;current=result;renderExperiment(current);}catch(err){if(request!==experimentRequest)return;UI.toast(err.message);$('#experiment-result').innerHTML=`<div class="error">${e(err.message)}</div>`;}finally{if(request===experimentRequest){b.disabled=false;b.textContent='Run experiment →';$('#export-readout').disabled=!current;}}}
+  async function run() {const request=++experimentRequest,b=form.querySelector('button[type=submit]');b.disabled=true;current=null;b.textContent='Analyzing…';$('#export-readout').disabled=true;try {const result=await UI.api('/api/signal/analyze',getParams());if(request!==experimentRequest)return;current=result;renderExperiment(current);}catch(err){if(request!==experimentRequest)return;UI.toast(err.message);$('#experiment-result').innerHTML=`<div class="error">${e(err.message)}</div>`;}finally{if(request===experimentRequest){b.disabled=false;b.textContent='Run experiment →';$('#export-readout').disabled=!current;}}}
   form.addEventListener('submit',ev=>{ev.preventDefault();run();});
   document.querySelectorAll('[data-scenario]').forEach(b=>b.onclick=()=>{const presets={clean:[7,0,50],friction:[7,8,50],broken:[7,0,68],null:[0,0,50]};const [lift,friction,allocation]=presets[b.dataset.scenario];Object.assign(form.elements.lift,{value:lift});form.elements.friction.value=friction;form.elements.allocation.value=allocation;labels();run();});
   async function downloadUsers() {try{const query=new URLSearchParams(current.parameters), data=await UI.api(`/api/signal/events?${query}`),keys=Object.keys(data.rows[0]);UI.download('signal-lab-synthetic-users.csv',[keys.join(','),...data.rows.map(r=>keys.map(k=>r[k]).join(','))].join('\n'),'text/csv');UI.toast('Synthetic user export prepared.');}catch(err){UI.toast(err.message);}}
+  DecisionLog.attach($('#decision-log'), {
+    project: 'Launch Decision Lab',
+    capture: () => {
+      const r = current;
+      if (!r || form.querySelector('button[type=submit]').disabled) return null;
+      return [
+        'Synthetic experiment',
+        `Policy decision: ${r.decision}`,
+        `Activation: ${pp(r.primary.delta)} (95% CI ${ci(r.primary)})`,
+        `Support contacts: ${pp(r.guardrail.delta)} (95% CI ${ci(r.guardrail)})`,
+        `Assignment integrity: ${r.srm.failed ? 'Failed' : 'Passed'}`,
+        `Parameters: ${JSON.stringify(r.parameters)}`,
+      ].join('\n');
+    },
+  });
   $('#export-readout').onclick=()=>{if(!current)return;const r=current;UI.download('signal-lab-synthetic-readout.md',`# Signal Lab — synthetic experiment readout\n\nAll data are generated. No real customers or impact claims.\n\nRuntime: ${r.runtime?.engine||'python reference'} / ${r.runtime?.rng||'Python random.Random'}\n\nDecision: ${r.decision}\n\n${r.explanation}\n\nParameters: ${JSON.stringify(r.parameters)}\n\nActivation effect: ${pp(r.primary.delta)} (95% CI ${ci(r.primary)})\n\nSupport-contact change: ${pp(r.guardrail.delta)} (95% CI ${ci(r.guardrail)})\n\nSample-ratio p-value: ${r.srm.p_value}\n\n${r.checks.map(c=>`- ${c.passed?'PASS':'HOLD'}: ${c.name}. ${c.detail}`).join('\n')}\n\nSegments are exploratory. Fixed-horizon, user-level independent simulation. Minimum sample is a demonstration threshold, not a power calculation. Browser and Python use different documented seeded generators; reproduce this readout in the stated runtime.\n`,'text/markdown');UI.toast('Experiment readout export prepared.');};
   function show(view){document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));['experiment','roadmap','calibration'].forEach(v=>$(`#${v}-view`).hidden=v!==view);if(view==='roadmap')roadmap();}
   document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>show(b.dataset.view));
